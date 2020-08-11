@@ -3,6 +3,7 @@ version: '3.7'
 services:
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
     - 8000:80
     volumes:
@@ -12,6 +13,7 @@ services:
       - db
   web:
     build: ./entry_task
+    container_name: web
     command:
       - bash
       - -c
@@ -27,6 +29,7 @@ services:
       - db
   db:
     image: mysql:latest
+    container_name: db
     command: --default-authentication-plugin=mysql_native_password --mysqlx=0
     ports:
     - 3306:3306
