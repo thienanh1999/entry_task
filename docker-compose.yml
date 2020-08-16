@@ -6,8 +6,9 @@ services:
     container_name: nginx
     ports:
     - 8000:80
+    - 8001:81
     volumes:
-    - ./nginx:/etc/nginx/conf.d
+    - ./entry_task/deploy/nginx:/etc/nginx/conf.d
     depends_on:
       - web
       - db
@@ -15,26 +16,33 @@ services:
     build: ./entry_task
     container_name: web
     command:
-      - bash
-      - -c
-      - |
-        ./wait-for-it.sh db:3306 -- python manage.py makemigrations
-        python manage.py migrate
-        gunicorn entry_task.wsgi:application --workers=2 --threads=2 --worker-class=gevent --bind 0.0.0.0:8000
+        gunicorn entry_task.wsgi:application --workers=3 --threads=2 --worker-class=gevent --bind 0.0.0.0:8000
     volumes:
     - ./entry_task/:/entry_task
     expose:
     - 8000
     depends_on:
       - db
+    env_file:
+      - entry_task/deploy/.env.development
+  admin:
+    build: ./entry_task
+    container_name: admin
+    command: gunicorn admin.wsgi:application --bind 0.0.0.0:8001
+    volumes:
+      - ./entry_task:/entry_task
+    expose:
+      - 8001
+    depends_on:
+      - db
+      - web
   db:
     image: mysql:latest
     container_name: db
+    volumes:
+      - ./entry_task/deploy/mysql/mysql_script.sql:/docker-entrypoint-initdb.d/dump.sql
     command: --default-authentication-plugin=mysql_native_password --mysqlx=0
     ports:
     - 3306:3306
-    environment:
-      MYSQL_DATABASE: 'entry_task_db'
-      MYSQL_USER: 'athen'
-      MYSQL_PASSWORD: 'P@ssword1'
-      MYSQL_ROOT_PASSWORD: 'P@ssword1'
+    env_file:
+      - entry_task/deploy/.env.development

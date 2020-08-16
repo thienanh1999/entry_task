@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" required><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  {% if token %}
+
+  {% else %}
+    <script type="text/javascript">
+        window.location.href = "http://localhost:8000/admin/login/";
+    </script>
+  {% endif %}
+
+  {% if result %}
+    <p>{{result}}</p>
+  {% endif %}
+
+  {% if image %}
+    <p>Image Link:</p>
+    <a href={{image}}>{{image}}</a>
+  {% endif %}
+
+{% endblock %}
