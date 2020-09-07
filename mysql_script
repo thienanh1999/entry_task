@@ -1,0 +1,74 @@
+CREATE TABLE `user_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `username` varchar(255),
+  `fullname` varchar(255),
+  `hashed_password` varchar(255),
+  `hash_key` varchar(255),
+  `created_at` unsigned,
+  `is_admin` boolean
+);
+
+CREATE TABLE `event_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `title` varchar(255),
+  `description` text,
+  `created_at` unsigned,
+  `start` unsigned,
+  `end` unsigned,
+  `location` varchar(255),
+  `images` text
+);
+
+CREATE TABLE `like_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `user_id` int,
+  `event_id` int,
+  `is_deleted` boolean
+);
+
+CREATE TABLE `comment_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `user_id` int,
+  `event_id` int,
+  `comment` text,
+  `created_at` unsigned
+);
+
+CREATE TABLE `paticipant_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `user_id` int,
+  `event_id` int
+);
+
+CREATE TABLE `category_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255)
+);
+
+CREATE TABLE `event_category_tab` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `event_id` int,
+  `category_id` int
+);
+
+CREATE UNIQUE INDEX `idx_username` ON `user_tab` (`username`);
+
+CREATE INDEX `idx_location` ON `event_tab` (`location`);
+
+CREATE INDEX `idx_end_start` ON `event_tab` (`end`, `start`);
+
+CREATE INDEX `idx_title_location` ON `event_tab` (`title`, `location`);
+
+CREATE UNIQUE INDEX `idx_event_id_user_id` ON `like_tab` (`event_id`, `user_id`);
+
+CREATE UNIQUE INDEX `idx_user_id_event_id` ON `like_tab` (`user_id`, `event_id`);
+
+CREATE INDEX `idx_event_id` ON `comment_tab` (`event_id`);
+
+CREATE UNIQUE INDEX `idx_event_id_user_id` ON `paticipant_tab` (`event_id`, `user_id`);
+
+CREATE UNIQUE INDEX `idx_user_id_event_id` ON `paticipant_tab` (`user_id`, `event_id`);
+
+CREATE UNIQUE INDEX `idx_category_id_event_id` ON `event_category_tab` (`category_id`, `event_id`);
+
+CREATE INDEX `idx_event_id` ON `event_category_tab` (`event_id`);

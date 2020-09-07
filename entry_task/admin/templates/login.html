@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}}
+
+{% block content %}
+    {% if token %}
+        <script type="text/javascript">
+            window.location.href = "http://localhost:8000/admin/create_event/";
+        </script>
+    {% endif %}
+
+    <h1>{{ title }}</h1>
+    <form method="post">
+      <label for="username">Username:</label><br>
+      <input type="text" id="username" name="username" required><br>
+      <label for="password">Password:</label><br>
+      <input id="password" name="password" type="password" required><br>
+      <input type="submit" value="Submit">
+    </form>
+    <p>
+        {% if result %}
+        {{ result }}
+        {% endif %}
+    </p>
+{% endblock content%}}

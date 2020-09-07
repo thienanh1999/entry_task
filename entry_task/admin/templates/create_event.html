@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" required><br>
+    <label for="description">Description:</label><br>
+    <input id="description" name="description" type="text"><br>
+    <label for="location">Location:</label><br>
+    <input type="text" id="location" name="location" required><br>
+    <label for="start">Start Time:</label><br>
+    <input type="text" id="start" name="start" required><br>
+    <label for="end">End Time:</label><br>
+    <input type="text" id="end" name="end" required><br>
+    <label for="category">Category:</label><br>
+    <input type="text" id="category" name="category" required><br>
+    <label for="images">Images:</label><br>
+    <input type="text" id="images" name="images"><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <a href="http://localhost:8000/admin/upload">Click to upload photo</a>
+
+  {% if token %}
+
+  {% else %}
+    <script type="text/javascript">
+        window.location.href = "http://localhost:8000/admin/login/";
+    </script>
+  {% endif %}
+
+  {% if result %}
+    <p>{{result}}</p>
+  {% endif %}
+
+{% endblock %}
